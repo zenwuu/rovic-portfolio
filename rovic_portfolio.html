@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROVIC // NET.ARCHITECT — Cyberpunk UI/UX & Full-Stack Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#05050a',
+                        obsidian: '#0b0c14',
+                        panel: '#10121f',
+                        cyan: '#00f3ff',
+                        magenta: '#ff007f',
+                        acid: '#fcee0a',
+                        matrix: '#00ff66',
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --cyan: #00f3ff;
+            --magenta: #ff007f;
+            --acid: #fcee0a;
+            --matrix: #00ff66;
+            --bg-void: #05050a;
+        }
+
+        * {
+            box-sizing: border-box;
+            selection-background-color: var(--cyan);
+            selection-color: #05050a;
+        }
+
+        ::selection {
+            background: var(--cyan);
+            color: #05050a;
+        }
+
+        body {
+            background-color: var(--bg-void);
+            color: #e2e8f0;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05050a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--cyan), var(--magenta));
+            border-radius: 2px;
+        }
+
+        /* Chamfered Cyberpunk Polygons */
+        .cyber-clip {
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        }
+
+        .cyber-clip-sm {
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .cyber-clip-btn {
+            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+        }
+
+        .cyber-frame-portrait {
+            clip-path: polygon(
+                24px 0, calc(100% - 24px) 0, 100% 24px,
+                100% calc(100% - 24px), calc(100% - 24px) 100%,
+                24px 100%, 0 calc(100% - 24px), 0 24px
+            );
+        }
+
+        /* CRT Scanline & Vignette Overlay */
+        .crt-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 90;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
+                radial-gradient(circle at center, transparent 60%, rgba(5, 5, 10, 0.75) 100%);
+            background-size: 100% 4px, 100% 100%;
+            opacity: 0.65;
+            transition: opacity 0.3s ease;
+        }
+
+        body.fx-disabled .crt-overlay {
+            opacity: 0;
+        }
+
+        /* Glitch Text Effect */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .glitch-text::before {
+            color: var(--cyan);
+            z-index: -1;
+            animation: glitch-anim-1 3.5s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            color: var(--magenta);
+            z-index: -2;
+            animation: glitch-anim-2 2.8s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0%, 92% { transform: translate(0); clip-path: inset(0 0 0 0); }
+            93% { transform: translate(-3px, 1px); clip-path: inset(15% 0 65% 0); }
+            95% { transform: translate(3px, -2px); clip-path: inset(70% 0 10% 0); }
+            97% { transform: translate(-2px, 2px); clip-path: inset(40% 0 40% 0); }
+            100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0%, 90% { transform: translate(0); clip-path: inset(0 0 0 0); }
+            92% { transform: translate(3px, -1px); clip-path: inset(60% 0 20% 0); }
+            94% { transform: translate(-3px, 2px); clip-path: inset(10% 0 75% 0); }
+            96% { transform: translate(2px, 1px); clip-path: inset(35% 0 30% 0); }
+            100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+        }
+
+        /* 4K Enhancement Filter for Profile Portrait */
+        .portrait-4k-filter {
+            filter: contrast(1.16) saturate(1.18) brightness(1.06) drop-shadow(0 0 18px rgba(0, 243, 255, 0.35));
+            transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s ease;
+        }
+
+        .portrait-raw-filter {
+            filter: contrast(0.95) saturate(0.95) brightness(0.98);
+            transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s ease;
+        }
+
+        /* Biometric Laser Scan Animation */
+        @keyframes laser-scan {
+            0% { top: -5%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 105%; opacity: 0; }
+        }
+
+        .biometric-laser {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--cyan), transparent);
+            box-shadow: 0 0 18px 4px rgba(0, 243, 255, 0.75);
+            animation: laser-scan 3.6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 25;
+        }
+
+        /* Rotating HUD Rings */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        .hud-ring-cw { animation: spin-slow 24s linear infinite; }
+        .hud-ring-ccw { animation: spin-reverse 18s linear infinite; }
+
+        /* 3D Tilt Card Glare */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.18s cubic-bezier(0.03, 0.98, 0.52, 0.99), box-shadow 0.3s ease;
+            position: relative;
+        }
+        .tilt-glare {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.16), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+        .tilt-card:hover .tilt-glare {
+            opacity: 1;
+        }
+
+        /* Custom HUD Reticle Cursor (Desktop) */
+        @media (pointer: fine) {
+            .cursor-dot, .cursor-ring {
+                position: fixed;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+            }
+            .cursor-dot {
+                width: 6px;
+                height: 6px;
+                background: var(--cyan);
+                box-shadow: 0 0 10px var(--cyan);
+            }
+            .cursor-ring {
+                width: 34px;
+                height: 34px;
+                border: 1.5px solid rgba(0, 243, 255, 0.6);
+                transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, transform 0.08s linear;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .cursor-ring::before, .cursor-ring::after {
+                content: '';
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                border-color: var(--magenta);
+            }
+            .cursor-ring.cursor-hover {
+                width: 54px;
+                height: 54px;
+                border-color: var(--acid);
+                background: rgba(252, 238, 10, 0.06);
+            }
+        }
+
+        /* Section Reveal Transitions */
+        .reveal-node {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-node.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Neon Glow Utilities */
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(0, 243, 255, 0.35);
+        }
+        .glow-magenta {
+            box-shadow: 0 0 25px -5px rgba(255, 0, 127, 0.35);
+        }
+        .glow-acid {
+            box-shadow: 0 0 25px -5px rgba(252, 238, 10, 0.4);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-cyan selection:text-void">
+
+    <!-- SVG Sharpening & Chromatic Filters for 4K Portrait Mode -->
+    <svg class="hidden" width="0" height="0">
+        <defs>
+            <filter id="unsharp-4k">
+                <feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="0 -0.45 0 -0.45 2.8 -0.45 0 -0.45 0"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- CRT Scanline & Vignette Overlay -->
+    <div id="crtOverlay" class="crt-overlay"></div>
+
+    <!-- Custom Interactive Reticle Cursor -->
+    <div id="cursorDot" class="cursor-dot hidden lg:block"></div>
+    <div id="cursorRing" class="cursor-ring hidden lg:block"></div>
+
+    <!-- Interactive Background Cyber-Grid Canvas -->
+    <canvas id="cyberCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0 opacity-75"></canvas>
+
+    <!-- ==================== BOOT-UP PRELOADER HUD ==================== -->
+    <div id="bootScreen" class="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+        <div class="w-full max-w-lg border border-cyan/40 bg-obsidian/90 p-6 cyber-clip relative shadow-[0_0_50px_rgba(0,243,255,0.2)]">
+            <div class="flex items-center justify-between text-xs font-mono text-cyan mb-4 border-b border-cyan/20 pb-2">
+                <span>SYS.INIT // ROVIC.OS v2026.4</span>
+                <span class="text-acid animate-pulse">[BOOT_SEQUENCE_ACTIVE]</span>
+            </div>
+            <div id="bootLogs" class="font-mono text-xs text-slate-300 space-y-1.5 h-32 overflow-hidden mb-4">
+                <div class="text-matrix">&gt; Mounting neural UI/UX kernel... OK</div>
+                <div class="text-cyan">&gt; Loading 4K optical enhancement shaders... OK</div>
+                <div class="text-slate-400">&gt; Verifying UC ICT Congress UI/UX Champion credentials... VERIFIED</div>
+                <div class="text-magenta">&gt; Establishing secure full-stack uplink [CEBU_NODE]...</div>
+            </div>
+            <div class="w-full bg-slate-900 h-2.5 overflow-hidden border border-cyan/40 p-0.5 mb-3">
+                <div id="bootProgress" class="h-full bg-gradient-to-r from-cyan via-magenta to-acid transition-all duration-150" style="width: 0%"></div>
+            </div>
+            <div class="flex items-center justify-between font-mono text-xs">
+                <span id="bootPercent" class="text-cyan font-bold">0%</span>
+                <button id="skipBootBtn" class="text-slate-400 hover:text-acid underline cursor-pointer">[SKIP INITIALIZATION]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HUD TOP NAVIGATION ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-void/85 backdrop-blur-md border-b border-cyan/25">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Identity -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 bg-cyan/10 border border-cyan flex items-center justify-center cyber-clip-sm group-hover:bg-cyan group-hover:text-void transition-all">
+                    <span class="font-display font-black text-sm tracking-tighter">RV</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display font-bold tracking-wider text-white text-sm sm:text-base">ROVIC</span>
+                        <span class="text-[10px] font-mono bg-magenta/20 text-magenta border border-magenta/50 px-1.5 py-0.5">v4.0</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-matrix animate-ping"></span>
+                        <span>CEBU_NODE //</span>
+                        <span id="hudClock" class="text-cyan">00:00:00</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Desktop HUD Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 lg:gap-2 font-mono text-xs">
+                <a href="#hero" class="px-3 py-1.5 text-slate-300 hover:text-cyan hover:bg-cyan/10 transition-all">[01. PROFILE]</a>
+                <a href="#arsenal" class="px-3 py-1.5 text-slate-300 hover:text-cyan hover:bg-cyan/10 transition-all">[02. ARSENAL]</a>
+                <a href="#deployments" class="px-3 py-1.5 text-slate-300 hover:text-cyan hover:bg-cyan/10 transition-all">[03. DEPLOYMENTS]</a>
+                <a href="#telemetry" class="px-3 py-1.5 text-slate-300 hover:text-cyan hover:bg-cyan/10 transition-all">[04. TELEMETRY]</a>
+                <a href="#uplink" class="px-3 py-1.5 text-slate-300 hover:text-cyan hover:bg-cyan/10 transition-all">[05. UPLINK]</a>
+            </nav>
+
+            <!-- Action Controls -->
+            <div class="flex items-center gap-2">
+                <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono bg-obsidian border border-matrix/40 text-matrix">
+                    <span class="w-1.5 h-1.5 rounded-full bg-matrix animate-ping"></span>
+                    <span>SYSTEM STATUS: ONLINE</span>
+                </div>
+                <a href="#uplink" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono bg-magenta/15 hover:bg-magenta/30 text-magenta border border-magenta/50 cyber-clip-sm transition-all cursor-pointer">
+                    <i class="ph-bold ph-terminal-window"></i>
+                    <span>DIRECT UPLINK</span>
+                </a>
+                <button id="fxToggleBtn" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono bg-cyan/10 hover:bg-cyan/25 text-cyan border border-cyan/40 cyber-clip-sm transition-all">
+                    <i class="ph-bold ph-monitor"></i>
+                    <span id="fxStatusText">FX: ON</span>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-cyan border border-cyan/40 bg-cyan/10">
+                    <i class="ph-bold ph-list text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden bg-obsidian/95 border-b border-cyan/30 px-4 pt-3 pb-5 space-y-2 font-mono text-xs">
+            <a href="#hero" class="mobile-nav-link block py-2 px-3 text-cyan bg-cyan/10">[01. PROFILE]</a>
+            <a href="#arsenal" class="mobile-nav-link block py-2 px-3 text-slate-300 hover:text-cyan">[02. ARSENAL]</a>
+            <a href="#deployments" class="mobile-nav-link block py-2 px-3 text-slate-300 hover:text-cyan">[03. DEPLOYMENTS]</a>
+            <a href="#telemetry" class="mobile-nav-link block py-2 px-3 text-slate-300 hover:text-cyan">[04. TELEMETRY]</a>
+            <a href="#uplink" class="mobile-nav-link block py-2 px-3 text-slate-300 hover:text-cyan">[05. UPLINK]</a>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+    <main class="relative z-10 pt-24 pb-20">
+
+        <!-- 01. HERO SECTION -->
+        <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+
+                <!-- Left Column: Bio & Hero Controls -->
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- HUD Status Pill -->
+                    <div class="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 bg-obsidian border border-cyan/40 cyber-clip-sm">
+                        <span class="w-2 h-2 bg-acid animate-ping"></span>
+                        <span class="font-mono text-xs tracking-wider text-cyan uppercase">FOURTH-YEAR IT SPECIALIST // FULL-STACK &amp; UI/UX ARCHITECT</span>
+                    </div>
+
+                    <!-- Glitch Headline -->
+                    <div class="space-y-2">
+                        <div class="font-mono text-xs text-magenta tracking-widest uppercase flex items-center gap-2">
+                            <span>// IDENTITY_VERIFIED:</span>
+                            <span class="text-acid">CHAMPION IN UI/UX DESIGN (UC ICT CONGRESS)</span>
+                        </div>
+                        <h1 class="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white leading-none">
+                            <span class="glitch-wrapper">
+                                <span class="glitch-text" data-text="ROVIC" data-scramble="ROVIC">ROVIC</span>
+                            </span>
+                            <span class="block text-xl sm:text-3xl lg:text-4xl font-tech font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan via-white to-magenta mt-3">
+                                ENGINEERING NEXT-GEN INTERFACES &amp; FULL-STACK SYSTEMS
+                            </span>
+                        </h1>
+                    </div>
+
+                    <!-- Bio Description -->
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl border-l-2 border-cyan pl-4 bg-obsidian/50 py-2">
+                        Fourth-year BS Information Technology specialist at the <span class="text-white font-semibold">University of Cebu — Main Campus</span>. Bridging high-contrast <span class="text-cyan font-medium">award-winning UI/UX design</span> with resilient <span class="text-magenta font-medium">Full-Stack Web &amp; Mobile Architecture</span>, civic transparency platforms, AI-powered microfinance tools, and binary security analysis.
+                    </p>
+
+                    <!-- Live Telemetry Counters -->
+                    <div class="grid grid-cols-3 gap-3 sm:gap-4 pt-2 max-w-xl">
+                        <div class="bg-obsidian/90 border border-cyan/30 p-3.5 cyber-clip-sm">
+                            <div class="font-display font-extrabold text-2xl sm:text-3xl text-acid">1ST</div>
+                            <div class="font-mono text-[11px] text-slate-400 mt-0.5">UI/UX CHAMPION // ICT CONGRESS</div>
+                        </div>
+                        <div class="bg-obsidian/90 border border-magenta/30 p-3.5 cyber-clip-sm">
+                            <div class="font-display font-extrabold text-2xl sm:text-3xl text-cyan">03</div>
+                            <div class="font-mono text-[11px] text-slate-400 mt-0.5">CORE FLAGSHIP DEPLOYMENTS</div>
+                        </div>
+                        <div class="bg-obsidian/90 border border-matrix/30 p-3.5 cyber-clip-sm">
+                            <div class="font-display font-extrabold text-2xl sm:text-3xl text-matrix">4K</div>
+                            <div class="font-mono text-[11px] text-slate-400 mt-0.5">OPTICAL HUD INTERFACE</div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#deployments" class="group relative inline-flex items-center gap-3 px-7 py-4 bg-cyan text-void font-display font-bold text-sm tracking-wider cyber-clip-btn hover:bg-acid transition-all shadow-[0_0_25px_rgba(0,243,255,0.45)]">
+                            <span>INITIALIZE PROJECTS</span>
+                            <i class="ph-bold ph-arrow-down-right text-lg group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform"></i>
+                        </a>
+                        <a href="#uplink" class="inline-flex items-center gap-3 px-6 py-4 bg-obsidian hover:bg-magenta/20 text-white hover:text-cyan border border-cyan/50 font-mono text-xs tracking-wider cyber-clip-btn transition-all">
+                            <i class="ph-bold ph-broadcast text-magenta text-base"></i>
+                            <span>TRANSMIT SIGNAL [UPLINK]</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive 4K Cyberpunk Portrait Scanner -->
+                <div class="lg:col-span-5 flex flex-col items-center">
+                    <div id="heroPortraitCard" class="tilt-card relative w-full max-w-md mx-auto">
+                        <!-- Rotating Outer HUD Decorative Rings -->
+                        <div class="absolute -inset-4 pointer-events-none hidden sm:flex items-center justify-center opacity-40">
+                            <svg class="w-full h-full hud-ring-cw" viewBox="0 0 400 400" fill="none">
+                                <circle cx="200" cy="200" r="190" stroke="#00f3ff" stroke-width="1" stroke-dasharray="12 8 4 8" />
+                                <circle cx="200" cy="200" r="178" stroke="#ff007f" stroke-width="1" stroke-dasharray="40 20" />
+                            </svg>
+                        </div>
+
+                        <!-- Main Portrait Container -->
+                        <div class="relative bg-obsidian border-2 border-cyan/60 p-3 cyber-frame-portrait glow-cyan">
+                            <div class="tilt-glare"></div>
+
+                            <!-- Top HUD Bar Inside Frame -->
+                            <div class="flex items-center justify-between font-mono text-[11px] px-2 pb-2 border-b border-cyan/30 mb-2">
+                                <div class="flex items-center gap-1.5 text-cyan">
+                                    <span class="w-2 h-2 bg-matrix inline-block rounded-full animate-pulse"></span>
+                                    <span>PORTRAIT_LOCK // 4K_UHD_VERIFIED</span>
+                                </div>
+                                <span id="resolutionBadge" class="px-1.5 py-0.5 bg-acid text-void font-bold text-[10px]">OPTICAL_ENHANCE: ACTIVE</span>
+                            </div>
+
+                            <!-- Image Viewport -->
+                            <div class="relative aspect-[4/5] w-full overflow-hidden bg-void cyber-clip-sm group">
+                                <!-- Biometric Laser Sweep -->
+                                <div id="laserBar" class="biometric-laser"></div>
+
+                                <!-- Permanent Locked Profile Image (`rovic.jpg`) -->
+                                <img
+                                    id="profileImage"
+                                    src="rovic.jpg"
+                                    alt="Rovic — Full-Stack Developer & UI/UX Designer"
+                                    style="filter: url(#unsharp-4k);"
+                                    class="w-full h-full object-cover object-center portrait-4k-filter group-hover:scale-105 transition-transform duration-700"
+                                    onerror="handlePortraitFallback(this)"
+                                />
+
+                                <!-- Fallback Interactive Hologram Canvas (Only shown if rovic.jpg is unavailable in a sandbox) -->
+                                <canvas id="fallbackPortraitCanvas" class="hidden absolute inset-0 w-full h-full object-cover"></canvas>
+
+                                <!-- Cyberpunk Neon Rim & Vignette Overlay over Photo -->
+                                <div id="cyberGradeOverlay" class="absolute inset-0 pointer-events-none bg-gradient-to-t from-void via-transparent to-cyan/15 mix-blend-screen opacity-80 transition-opacity duration-300"></div>
+                                <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_45px_rgba(5,5,10,0.85)]"></div>
+
+                                <!-- Floating Corner Reticles -->
+                                <div class="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-cyan pointer-events-none"></div>
+                                <div class="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-cyan pointer-events-none"></div>
+                                <div class="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-acid pointer-events-none"></div>
+                                <div class="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-acid pointer-events-none"></div>
+
+                                <!-- Bottom Overlay Telemetry Badge -->
+                                <div class="absolute bottom-3 inset-x-3 bg-void/85 backdrop-blur-md border border-cyan/40 p-2.5 flex items-center justify-between">
+                                    <div>
+                                        <div class="font-display font-bold text-xs text-white tracking-wider">ROVIC // ARCHITECT</div>
+                                        <div id="portraitSubStatus" class="font-mono text-[10px] text-cyan">OPTICAL DEBLUR &amp; HDR LUT APPLIED</div>
+                                    </div>
+                                    <div class="text-right font-mono text-[10px] text-matrix">
+                                        <div>IDENTITY: LOCKED</div>
+                                        <div>RES: 3840x2160 UHD</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Portrait Control Bar (Aesthetic 4K Optical Shader Toggle + Biometric Scan Toggle) -->
+                            <div class="mt-3 grid grid-cols-2 gap-2">
+                                <button id="toggle4kBtn" class="flex items-center justify-center gap-1.5 py-2 px-3 bg-cyan/15 hover:bg-cyan/30 border border-cyan text-cyan font-mono text-xs transition-all cursor-pointer">
+                                    <i class="ph-bold ph-sparkle"></i>
+                                    <span id="toggle4kText">4K SHADER: ON</span>
+                                </button>
+                                <button id="toggleScanBtn" class="flex items-center justify-center gap-1.5 py-2 px-3 bg-obsidian hover:bg-magenta/20 border border-magenta/60 text-magenta font-mono text-xs transition-all cursor-pointer">
+                                    <i class="ph-bold ph-scan"></i>
+                                    <span id="toggleScanText">LASER SCAN: ON</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Floating Award Badge -->
+                        <div class=" -bottom-4 -left-4 z-30 bg-obsidian border-2 border-acid px-3.5 py-2 cyber-clip-sm shadow-[0_0_20px_rgba(252,238,10,0.3)] flex items-center gap-2.5 mt-3">
+                            <i class="ph-fill ph-trophy text-acid text-xl"></i>
+                            <div class="font-mono text-[11px] leading-tight">
+                                <div class="text-acid font-bold">UI/UX DESIGN CHAMPION</div>
+                                <div class="text-slate-300">UC ICT CONGRESS // OPENBUDGET+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== 02. INTERACTIVE ARSENAL / SKILL MATRIX ==================== -->
+        <section id="arsenal" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-node">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-cyan/25 pb-5">
+                <div>
+                    <div class="font-mono text-xs text-cyan uppercase tracking-widest mb-1">// 02. TECHNICAL_CAPABILITIES</div>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-white tracking-wide" data-scramble="SYSTEM ARSENAL &amp; MATRIX">
+                        SYSTEM ARSENAL &amp; MATRIX
+                    </h2>
+                </div>
+                <!-- Category Filter Buttons -->
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0 font-mono text-xs" id="arsenalTabs">
+                    <button data-cat="all" class="arsenal-tab active-tab px-3.5 py-1.5 bg-cyan text-void font-bold cyber-clip-sm transition-all">ALL_MODULES</button>
+                    <button data-cat="frontend" class="arsenal-tab px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all">UI/UX &amp; FRONTEND</button>
+                    <button data-cat="backend" class="arsenal-tab px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all">BACKEND &amp; DB</button>
+                    <button data-cat="sec" class="arsenal-tab px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all">SEC &amp; HARDWARE</button>
+                </div>
+            </div>
+
+            <!-- Skill Modules Grid -->
+            <div id="arsenalGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Module 1: Frontend & UI/UX -->
+                <div data-category="frontend" class="arsenal-card bg-obsidian/90 border border-cyan/40 p-6 cyber-clip hover:border-cyan transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-mono text-xs text-cyan">[MOD_01 // INTERFACE]</span>
+                        <i class="ph-duotone ph-bezier-curve text-2xl text-cyan"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-4">UI/UX &amp; Frontend</h3>
+                    <div class="space-y-3.5 font-mono text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1"><span>UI/UX Prototyping &amp; Wireframing</span><span class="text-acid">98%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-gradient-to-r from-cyan to-acid w-[98%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>React.js / Vite / Modern JS</span><span class="text-cyan">94%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[94%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Tailwind CSS / HTML5 / CSS3</span><span class="text-cyan">96%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[96%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Brand Identity &amp; Mascot Design</span><span class="text-magenta">92%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-magenta w-[92%]"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 2: Backend Architecture -->
+                <div data-category="backend" class="arsenal-card bg-obsidian/90 border border-magenta/40 p-6 cyber-clip hover:border-magenta transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-mono text-xs text-magenta">[MOD_02 // CORE_ENGINE]</span>
+                        <i class="ph-duotone ph-cpu text-2xl text-magenta"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-4">Backend &amp; APIs</h3>
+                    <div class="space-y-3.5 font-mono text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1"><span>ASP.NET Core MVC / C#</span><span class="text-magenta">92%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-magenta w-[92%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Node.js / Express REST APIs</span><span class="text-cyan">90%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[90%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Python / Flask Microservices</span><span class="text-cyan">88%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[88%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Offline-First Sync Architecture</span><span class="text-acid">90%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-acid w-[90%]"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 3: Data & Cloud Deployment -->
+                <div data-category="backend" class="arsenal-card bg-obsidian/90 border border-acid/40 p-6 cyber-clip hover:border-acid transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-mono text-xs text-acid">[MOD_03 // DATA_CLOUD]</span>
+                        <i class="ph-duotone ph-database text-2xl text-acid"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-4">Data &amp; Cloud Ops</h3>
+                    <div class="space-y-3.5 font-mono text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1"><span>MySQL / SQL Server / PostgreSQL</span><span class="text-acid">93%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-acid w-[93%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>SQLite Local Mobile Storage</span><span class="text-cyan">91%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[91%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Git / GitHub Version Control</span><span class="text-cyan">95%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[95%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Cloudflare Pages / Vercel / Render</span><span class="text-matrix">92%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-matrix w-[92%]"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 4: Reverse Engineering & Hardware -->
+                <div data-category="sec" class="arsenal-card bg-obsidian/90 border border-matrix/40 p-6 cyber-clip hover:border-matrix transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="font-mono text-xs text-matrix">[MOD_04 // SEC_LABS]</span>
+                        <i class="ph-duotone ph-shield-checkered text-2xl text-matrix"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white mb-4">Security &amp; Hardware</h3>
+                    <div class="space-y-3.5 font-mono text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Binary Analysis (Ghidra / IDA Pro)</span><span class="text-matrix">86%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-matrix w-[86%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Dynamic Debugging (x64dbg / GDB)</span><span class="text-cyan">85%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-cyan w-[85%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Arduino Uno Embedded Prototyping</span><span class="text-acid">89%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-acid w-[89%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>System Architecture &amp; QA Testing</span><span class="text-magenta">94%</span></div>
+                            <div class="h-1.5 bg-slate-900 overflow-hidden"><div class="h-full bg-magenta w-[94%]"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 03. FEATURED DEPLOYMENTS (PROJECTS) ==================== -->
+        <section id="deployments" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-node">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-cyan/25 pb-5">
+                <div>
+                    <div class="font-mono text-xs text-magenta uppercase tracking-widest mb-1">// 03. VERIFIED_DEPLOYMENTS</div>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-white tracking-wide" data-scramble="FEATURED SYSTEMS &amp; ARCHITECTURES">
+                        FEATURED SYSTEMS &amp; ARCHITECTURES
+                    </h2>
+                </div>
+
+                <!-- Project Category Filter -->
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0 font-mono text-xs" id="projectFilterBar">
+                    <button data-filter="all" class="proj-filter-btn px-3.5 py-1.5 bg-magenta text-white font-bold cyber-clip-sm transition-all">ALL [03]</button>
+                    <button data-filter="civic" class="proj-filter-btn px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all">WEB &amp; CIVIC TECH</button>
+                    <button data-filter="mobile" class="proj-filter-btn px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all">MOBILE &amp; AI</button>
+                    <button data-filter="systems" class="proj-filter-btn px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all">ENTERPRISE &amp; CORE</button>
+                </div>
+            </div>
+
+            <!-- Projects Grid (Rendered dynamically via JS for filtering & modal inspection) -->
+            <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+        </section>
+
+        <!-- ==================== 04. ACHIEVEMENTS & TELEMETRY TIMELINE ==================== -->
+        <section id="telemetry" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-node">
+            <div class="mb-12 border-b border-cyan/25 pb-5">
+                <div class="font-mono text-xs text-acid uppercase tracking-widest mb-1">// 04. CAREER_TELEMETRY</div>
+                <h2 class="font-display font-black text-3xl sm:text-4xl text-white tracking-wide" data-scramble="HONORS, EDUCATION &amp; MILESTONES">
+                    HONORS, EDUCATION &amp; MILESTONES
+                </h2>
+            </div>
+
+            <div class="relative border-l-2 border-cyan/40 ml-3 sm:ml-6 pl-6 sm:pl-10 space-y-10">
+                <!-- Milestone 1 -->
+                <div class="relative group">
+                    <div class=" -left-[33px] sm:-left-[49px] top-1 w-4 h-4 bg-acid border-2 border-void shadow-[0_0_15px_#fcee0a] absolute"></div>
+                    <div class="bg-obsidian/90 border border-acid/50 p-6 cyber-clip hover:border-acid transition-all">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="font-mono text-xs px-2.5 py-0.5 bg-acid text-void font-bold">2026 // CHAMPIONSHIP AWARD</span>
+                            <span class="font-mono text-xs text-acid">UNIVERSITY OF CEBU ICT CONGRESS</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white mb-2">🏆 Champion in UI/UX Design — OpenBudget+</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Spearheaded the user experience architecture, visual design system, and interactive civic transparency workflows for <span class="text-cyan">OpenBudget+</span>, earning 1st Place Champion honors at the University of Cebu ICT Congress.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="relative group">
+                    <div class=" -left-[33px] sm:-left-[49px] top-1 w-4 h-4 bg-cyan border-2 border-void shadow-[0_0_15px_#00f3ff] absolute"></div>
+                    <div class="bg-obsidian/90 border border-cyan/40 p-6 cyber-clip hover:border-cyan transition-all">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="font-mono text-xs px-2.5 py-0.5 bg-cyan/20 text-cyan border border-cyan/50">2026 // CAPSTONE &amp; REGIONAL PITCHES</span>
+                            <span class="font-mono text-xs text-cyan">CAPSTONE DEFENSE</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white mb-2">Lead Programmer — PumpQ, &amp; Catpuccino</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Architected <span class="text-white font-medium">PumpQ</span> (unified mobile fuel pre-ordering &amp; express road service platform) and engineered <span class="text-magenta font-medium">Catpuccino</span> (full-stack ASP.NET Core MVC ordering &amp; customer platform).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="relative group">
+                    <div class=" -left-[33px] sm:-left-[49px] top-1 w-4 h-4 bg-magenta border-2 border-void shadow-[0_0_15px_#ff007f] absolute"></div>
+                    <div class="bg-obsidian/90 border border-magenta/40 p-6 cyber-clip hover:border-magenta transition-all">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="font-mono text-xs px-2.5 py-0.5 bg-magenta/20 text-magenta border border-magenta/50">FOURTH-YEAR BSIT // ACADEMIC TENURE</span>
+                            <span class="font-mono text-xs text-slate-400">CEBU CITY, PHILIPPINES</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-white mb-2">BS Information Technology — University of Cebu (Main Campus)</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            College of Computer Studies. Specializing in Full-Stack Web &amp; Mobile Development, Enterprise MVC Systems (C# / ASP.NET Core), Reverse Engineering &amp; Binary Security Analysis, and TOPCIT / TESDA technical competency tracks.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 05. ENCRYPTED UPLINK / CONTACT TERMINAL ==================== -->
+        <section id="uplink" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal-node">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Left Column: Direct Comms & Quick Copy -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div>
+                        <div class="font-mono text-xs text-matrix uppercase tracking-widest mb-1">// 05. ENCRYPTED_UPLINK</div>
+                        <h2 class="font-display font-black text-3xl sm:text-4xl text-white tracking-wide" data-scramble="INITIATE TRANSMISSION">
+                            INITIATE TRANSMISSION
+                        </h2>
+                        <p class="text-slate-300 text-sm mt-3 leading-relaxed">
+                            Available for Full-Stack Software Engineering roles, UI/UX Product Design collaborations, and civic/mobile platform architecture.
+                        </p>
+                    </div>
+
+                    <!-- Direct Node Cards -->
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="bg-obsidian border border-cyan/40 p-4 cyber-clip-sm flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="ph-duotone ph-envelope-simple text-cyan text-xl"></i>
+                                <div>
+                                    <div class="text-slate-400 text-[10px]">DIRECT_COMMS_EMAIL</div>
+                                    <div id="emailText" class="text-white font-bold">rovic.dev@cebu</div>
+                                </div>
+                            </div>
+                            <button onclick="copyNodeText('jhonrovic7@gmail.com', 'EMAIL COPIED TO CLIPBOARD')" class="px-2.5 py-1 bg-cyan/15 hover:bg-cyan text-cyan hover:text-void border border-cyan/40 transition-all">
+                                COPY
+                            </button>
+                        </div>
+
+                        <div class="bg-obsidian border border-magenta/40 p-4 cyber-clip-sm flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="ph-duotone ph-github-logo text-magenta text-xl"></i>
+                                <div>
+                                    <div class="text-slate-400 text-[10px]">GIT_REPOSITORY_HUB</div>
+                                    <div class="text-white font-bold">github.com/rovic-dev</div>
+                                </div>
+                            </div>
+                            <button onclick="copyNodeText('https://github.com/zenwuu/zenwuu', 'GITHUB URL COPIED')" class="px-2.5 py-1 bg-magenta/15 hover:bg-magenta text-magenta hover:text-white border border-magenta/40 transition-all">
+                                COPY
+                            </button>
+                        </div>
+
+                        <div class="bg-obsidian border border-acid/40 p-4 cyber-clip-sm flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="ph-duotone ph-map-pin-line text-acid text-xl"></i>
+                                <div>
+                                    <div class="text-slate-400 text-[10px]">OPERATIONAL_BASE</div>
+                                    <div class="text-white font-bold">Cebu, Central Visayas, PH</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 bg-matrix/20 text-matrix border border-matrix/40 text-[10px]">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Terminal Form -->
+                <div class="lg:col-span-7 bg-obsidian/95 border border-cyan/50 p-6 sm:p-8 cyber-clip glow-cyan">
+                    <div class="flex items-center justify-between border-b border-cyan/25 pb-3 mb-6 font-mono text-xs">
+                        <span class="text-cyan">TERMINAL // SECURE_PACKET_COMPOSER</span>
+                        <span id="packetTelemetry" class="text-matrix">PAYLOAD_SIZE: 0 BYTES</span>
+                    </div>
+
+                    <form id="uplinkForm" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-mono text-xs text-cyan mb-1.5">01. SENDER_IDENTIFIER *</label>
+                                <input type="text" id="senderName" required placeholder="e.g. Alex Mercer // Tech Lead" class="w-full bg-void border border-cyan/40 focus:border-acid px-4 py-3 text-sm text-white font-mono outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label class="block font-mono text-xs text-cyan mb-1.5">02. RETURN_FREQUENCY (EMAIL) *</label>
+                                <input type="email" id="senderEmail" required placeholder="alex@enterprise.io" class="w-full bg-void border border-cyan/40 focus:border-acid px-4 py-3 text-sm text-white font-mono outline-none transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-mono text-xs text-cyan mb-1.5">03. MISSION_DIRECTIVE</label>
+                            <select id="missionType" class="w-full bg-void border border-cyan/40 focus:border-acid px-4 py-3 text-sm text-white font-mono outline-none transition-colors">
+                                <option value="UI/UX Architecture & Product Design">UI/UX Architecture &amp; Product Design</option>
+                                <option value="Full-Stack Web / Mobile Development">Full-Stack Web / Mobile Development</option>
+                                <option value="Internship / Full-Time Engineering Role">Software Engineering / IT Specialist Opportunity</option>
+                                <option value="Hackathon / Civic Tech Collaboration">Hackathon / Civic Tech Collaboration</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-mono text-xs text-cyan mb-1.5">04. ENCRYPTED_MESSAGE_PAYLOAD *</label>
+                            <textarea id="senderMessage" rows="4" required placeholder="Transmit project specs, timeline, or collaboration inquiry..." class="w-full bg-void border border-cyan/40 focus:border-acid px-4 py-3 text-sm text-white font-mono outline-none transition-colors"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-cyan via-cyan to-magenta text-void font-display font-black text-sm tracking-widest cyber-clip-btn hover:opacity-95 transition-all cursor-pointer">
+                            ENCRYPT &amp; TRANSMIT PACKET [↵]
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== PROJECT DETAILS HUD MODAL ==================== -->
+    <div id="projectModal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4 bg-void/85 backdrop-blur-md">
+        <div class="relative w-full max-w-2xl bg-obsidian border-2 border-cyan p-6 sm:p-8 cyber-clip shadow-[0_0_60px_rgba(0,243,255,0.3)] max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-cyan/30 pb-3 mb-5">
+                <div class="font-mono text-xs text-cyan" id="modalCode">// DEPLOYMENT_SPEC</div>
+                <button id="closeModalBtn" class="px-3 py-1 bg-magenta/20 hover:bg-magenta text-magenta hover:text-white font-mono text-xs border border-magenta/50 transition-all">
+                    [ESC // CLOSE]
+                </button>
+            </div>
+            <div id="modalBadge" class="inline-block font-mono text-xs px-2.5 py-1 bg-acid text-void font-bold mb-3"></div>
+            <h3 id="modalTitle" class="font-display font-black text-2xl sm:text-3xl text-white mb-2"></h3>
+            <p id="modalSubtitle" class="font-mono text-xs text-cyan mb-5"></p>
+            <p id="modalDesc" class="text-slate-300 text-sm leading-relaxed mb-6 border-l-2 border-magenta pl-4"></p>
+
+            <div class="mb-6">
+                <div class="font-mono text-xs text-acid uppercase mb-2">// KEY ARCHITECTURAL FEATURES</div>
+                <ul id="modalFeatures" class="space-y-2 text-xs sm:text-sm text-slate-200 font-mono"></ul>
+            </div>
+
+            <div>
+                <div class="font-mono text-xs text-cyan uppercase mb-2">// TECH STACK &amp; TOOLS</div>
+                <div id="modalStack" class="flex flex-wrap gap-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HUD TOAST NOTIFICATION ==================== -->
+    <div id="hudToast" class="fixed bottom-6 right-6 z-[95] transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-obsidian border-2 border-acid px-5 py-3.5 cyber-clip-sm shadow-[0_0_25px_rgba(252,238,10,0.35)] flex items-center gap-3">
+            <i class="ph-fill ph-check-circle text-acid text-xl"></i>
+            <span id="hudToastText" class="font-mono text-xs text-white font-bold tracking-wider">SYSTEM UPDATED</span>
+        </div>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="relative z-10 border-t border-cyan/20 bg-void/90 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-400">
+            <div>
+                <span class="text-cyan font-bold">ROVIC // NET.ARCHITECT</span> — 4K CYBERPUNK HUD SPEC
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#hero" class="hover:text-cyan transition-colors">[TOP_OF_STACK ↑]</a>
+                <span class="text-matrix">STATUS: ALL SYSTEMS NOMINAL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== APPLICATION SCRIPTS ==================== -->
+    <script>
+        /* -----------------------------------------------------------
+         * 1. PROJECT DATA REPOSITORY (Tailored to Rovic's Portfolio)
+         * ----------------------------------------------------------- */
+        const PROJECTS_DATA = [
+            {
+                id: 'openbudget',
+                code: 'SYS_01 // CIVIC_TECH',
+                category: 'civic',
+                title: 'OpenBudget+',
+                subtitle: 'Local Government Budget Transparency & Civic Tracking Platform',
+                badge: '🏆 CHAMPION IN UI/UX DESIGN — UC ICT CONGRESS',
+                accent: 'acid',
+                summary: 'Award-winning civic tech web application engineered to visualize municipal budget allocations, procurement milestones, and public infrastructure spending with crystal-clear citizen dashboards.',
+                features: [
+                    'Interactive fiscal allocation breakdown & real-time barangay/city project trackers',
+                    'Awarded 1st Place Champion in UI/UX Design at the University of Cebu ICT Congress',
+                    'Accessible data visualization workflows tailored for public accountability'
+                ],
+                stack: ['UI/UX Architecture', 'React.js', 'Tailwind CSS', 'Interactive Data Viz', 'Figma Prototyping']
+            },
+            {
+                id: 'pumpq',
+                code: 'SYS_02 // CAPSTONE_MOBILE',
+                category: 'mobile',
+                title: 'PumpQ',
+                subtitle: 'Convenience-Driven Unified Mobile Platform for Quick Road Services',
+                badge: 'CAPSTONE PROJECT // SMART MOBILITY',
+                accent: 'cyan',
+                summary: 'Full-stack mobile ecosystem transforming gas station operations with fuel pre-ordering, live pump price telemetry, digital invoicing, and dedicated express lane QR verification.',
+                features: [
+                    'Smart fuel pre-ordering & digital queue management for zero-wait express lanes',
+                    'Real-time station fuel price comparison & emergency roadside assistance dispatch',
+                    'Unified driver, attendant, and station manager telemetry dashboards'
+                ],
+                stack: ['Mobile UI/UX', 'Full-Stack API', 'Real-Time Telemetry', 'QR Express Auth', 'Relational DB']
+            },
+            {
+                id: 'catpuccino',
+                code: 'SYS_03 // ENTERPRISE_MVC',
+                category: 'systems',
+                title: 'Catpuccino',
+                subtitle: 'Full-Stack Cat Cafe Ordering, Menu & Customer Profile Platform',
+                badge: 'ASP.NET CORE MVC // C#',
+                accent: 'magenta',
+                summary: 'End-to-end web application built on ASP.NET Core MVC and C# featuring dynamic menu customization, live kitchen order status tracking, and personalized customer profiles.',
+                features: [
+                    'Role-based admin inventory & menu management with image pipelines',
+                    'Real-time order pipeline tracking from barista prep to table delivery',
+                    'Relational database schema built with SQL Server & Entity Framework patterns'
+                ],
+                stack: ['ASP.NET Core MVC', 'C#', 'SQL Server', 'Bootstrap / Custom CSS', 'RESTful Controllers']
+            }
+        ];
+
+        /* -----------------------------------------------------------
+         * 2. RENDER PROJECTS & FILTERING
+         * ----------------------------------------------------------- */
+        const projectsGrid = document.getElementById('projectsGrid');
+
+        function renderProjects(filter = 'all') {
+            projectsGrid.innerHTML = '';
+            const filtered = filter === 'all'
+                ? PROJECTS_DATA
+                : PROJECTS_DATA.filter(p => p.category === filter);
+
+            filtered.forEach(proj => {
+                const borderMap = {
+                    acid: 'border-acid/50 hover:border-acid',
+                    cyan: 'border-cyan/50 hover:border-cyan',
+                    magenta: 'border-magenta/50 hover:border-magenta',
+                    matrix: 'border-matrix/50 hover:border-matrix'
+                };
+                const badgeMap = {
+                    acid: 'bg-acid text-void',
+                    cyan: 'bg-cyan/20 text-cyan border border-cyan/50',
+                    magenta: 'bg-magenta/20 text-magenta border border-magenta/50',
+                    matrix: 'bg-matrix/20 text-matrix border border-matrix/50'
+                };
+
+                const card = document.createElement('article');
+                card.className = `tilt-card bg-obsidian/90 border ${borderMap[proj.accent]} p-6 cyber-clip flex flex-col justify-between cursor-pointer group`;
+                card.onclick = () => openProjectModal(proj.id);
+
+                card.innerHTML = `
+                    <div class="tilt-glare"></div>
+                    <div>
+                        <div class="flex items-center justify-between font-mono text-[11px] text-slate-400 mb-3">
+                            <span>${proj.code}</span>
+                            <span class="text-cyan group-hover:translate-x-1 transition-transform">[INSPECT ↗]</span>
+                        </div>
+                        <div class="inline-block font-mono text-[10px] font-bold px-2.5 py-1 mb-3 ${badgeMap[proj.accent]}">
+                            ${proj.badge}
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-white group-hover:text-cyan transition-colors mb-1">
+                            ${proj.title}
+                        </h3>
+                        <p class="font-mono text-xs text-slate-400 mb-3">${proj.subtitle}</p>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-5">
+                            ${proj.summary}
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex flex-wrap gap-1.5">
+                        ${proj.stack.map(t => `<span class="font-mono text-[10px] px-2 py-0.5 bg-void text-slate-300 border border-slate-700">${t}</span>`).join('')}
+                    </div>
+                `;
+                projectsGrid.appendChild(card);
+            });
+
+            initTiltCards();
+        }
+
+        // Filter bar click events
+        document.querySelectorAll('.proj-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.proj-filter-btn').forEach(b => {
+                    b.className = 'proj-filter-btn px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all';
+                });
+                btn.className = 'proj-filter-btn px-3.5 py-1.5 bg-magenta text-white font-bold cyber-clip-sm transition-all';
+                renderProjects(btn.dataset.filter);
+            });
+        });
+
+        /* -----------------------------------------------------------
+         * 3. PROJECT DETAILS MODAL LOGIC (INSPECT ATTRIBUTE)
+         * ----------------------------------------------------------- */
+        const projectModal = document.getElementById('projectModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        function openProjectModal(projId) {
+            const proj = PROJECTS_DATA.find(p => p.id === projId);
+            if (!proj) return;
+
+            document.getElementById('modalCode').textContent = `// ${proj.code}`;
+            document.getElementById('modalBadge').textContent = proj.badge;
+            document.getElementById('modalTitle').textContent = proj.title;
+            document.getElementById('modalSubtitle').textContent = proj.subtitle;
+            document.getElementById('modalDesc').textContent = proj.summary;
+
+            const featuresList = document.getElementById('modalFeatures');
+            featuresList.innerHTML = proj.features
+                .map(f => `<li class="flex items-start gap-2"><span class="text-cyan">▹</span><span>${f}</span></li>`)
+                .join('');
+
+            const stackContainer = document.getElementById('modalStack');
+            stackContainer.innerHTML = proj.stack
+                .map(s => `<span class="font-mono text-xs px-2.5 py-1 bg-void text-cyan border border-cyan/40">${s}</span>`)
+                .join('');
+
+            projectModal.classList.remove('hidden');
+            projectModal.classList.add('flex');
+            showHudToast(`INSPECTING DEPLOYMENT // ${proj.title.toUpperCase()}`);
+        }
+
+        function closeProjectModal() {
+            projectModal.classList.add('hidden');
+            projectModal.classList.remove('flex');
+        }
+
+        closeModalBtn.addEventListener('click', closeProjectModal);
+
+        projectModal.addEventListener('click', (e) => {
+            if (e.target === projectModal) closeProjectModal();
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !projectModal.classList.contains('hidden')) {
+                closeProjectModal();
+            }
+        });
+
+        /* -----------------------------------------------------------
+         * 4. PERMANENT 4K PROFILE IMAGE (`rovic.jpg`) SHADER CONTROLS
+         * ----------------------------------------------------------- */
+        const profileImage = document.getElementById('profileImage');
+        const toggle4kBtn = document.getElementById('toggle4kBtn');
+        const toggle4kText = document.getElementById('toggle4kText');
+        const toggleScanBtn = document.getElementById('toggleScanBtn');
+        const toggleScanText = document.getElementById('toggleScanText');
+        const laserBar = document.getElementById('laserBar');
+        const resolutionBadge = document.getElementById('resolutionBadge');
+        let is4kEnhanced = true;
+        let isLaserActive = true;
+
+        function apply4kFilterUI(enabled) {
+            is4kEnhanced = enabled;
+            if (is4kEnhanced) {
+                profileImage.classList.remove('portrait-raw-filter');
+                profileImage.classList.add('portrait-4k-filter');
+                profileImage.style.filter = 'url(#unsharp-4k)';
+                toggle4kText.textContent = '4K SHADER: ON';
+                resolutionBadge.textContent = 'OPTICAL_ENHANCE: ACTIVE';
+                resolutionBadge.className = 'px-1.5 py-0.5 bg-acid text-void font-bold text-[10px]';
+            } else {
+                profileImage.classList.remove('portrait-4k-filter');
+                profileImage.classList.add('portrait-raw-filter');
+                profileImage.style.filter = 'none';
+                toggle4kText.textContent = '4K SHADER: OFF';
+                resolutionBadge.textContent = 'ORIGINAL_RAW // MODE';
+                resolutionBadge.className = 'px-1.5 py-0.5 bg-slate-700 text-slate-200 font-bold text-[10px]';
+            }
+        }
+
+        // Stylized Cyberpunk Hologram Fallback (only rendered if `rovic.jpg` path is missing in an isolated preview)
+        function handlePortraitFallback(imgEl) {
+            const canvas = document.getElementById('fallbackPortraitCanvas');
+            canvas.classList.remove('hidden');
+            imgEl.classList.add('opacity-0');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 480;
+            canvas.height = 600;
+
+            const grad = ctx.createLinearGradient(0, 0, 0, 600);
+            grad.addColorStop(0, '#0d1528');
+            grad.addColorStop(0.5, '#161b33');
+            grad.addColorStop(1, '#05050a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 480, 600);
+
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.15)';
+            ctx.lineWidth = 1;
+            for (let y = 40; y < 600; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(480, y); ctx.stroke();
+            }
+
+            ctx.fillStyle = 'rgba(255, 0, 127, 0.22)';
+            ctx.beginPath(); ctx.arc(130, 250, 90, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.2)';
+            ctx.beginPath(); ctx.arc(360, 280, 110, 0, Math.PI * 2); ctx.fill();
+
+            ctx.fillStyle = '#090d1a';
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(130, 600);
+            ctx.lineTo(155, 390);
+            ctx.lineTo(255, 360);
+            ctx.lineTo(310, 430);
+            ctx.lineTo(330, 600);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(235, 255, 68, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#ff007f';
+            ctx.fillRect(240, 232, 34, 22);
+            ctx.fillRect(280, 230, 26, 20);
+            ctx.strokeStyle = '#fcee0a';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(240, 232, 34, 22);
+            ctx.strokeRect(280, 230, 26, 20);
+
+            ctx.fillStyle = '#00f3ff';
+            ctx.font = 'bold 12px "JetBrains Mono", monospace';
+            ctx.fillText('ROVIC.JPG // 4K PORTRAIT LOCKED', 115, 540);
+        }
+
+        // Toggle 4K Optical Enhancement Filter
+        toggle4kBtn.addEventListener('click', () => {
+            apply4kFilterUI(!is4kEnhanced);
+            showHudToast(is4kEnhanced ? '4K OPTICAL UNSHARP MASK & HDR LUT ACTIVE' : 'RAW ORIGINAL PORTRAIT PASS');
+        });
+
+        // Toggle Biometric Laser Sweep
+        toggleScanBtn.addEventListener('click', () => {
+            isLaserActive = !isLaserActive;
+            laserBar.classList.toggle('hidden', !isLaserActive);
+            toggleScanText.textContent = isLaserActive ? 'LASER SCAN: ON' : 'LASER SCAN: OFF';
+            showHudToast(isLaserActive ? 'BIOMETRIC LASER SCANNER ACTIVE' : 'BIOMETRIC LASER PAUSED');
+        });
+
+        /* -----------------------------------------------------------
+         * 5. 3D PERSPECTIVE TILT MICRO-INTERACTION
+         * ----------------------------------------------------------- */
+        function initTiltCards() {
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -6;
+                    const rotateY = ((x - centerX) / centerX) * 6;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    const glare = card.querySelector('.tilt-glare');
+                    if (glare) {
+                        glare.style.background = `radial-gradient(circle at ${(x / rect.width) * 100}% ${(y / rect.height) * 100}%, rgba(0, 243, 255, 0.22), transparent 60%)`;
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+                });
+            });
+        }
+
+        /* -----------------------------------------------------------
+         * 6. ARSENAL MODULE TABS
+         * ----------------------------------------------------------- */
+        document.querySelectorAll('.arsenal-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.arsenal-tab').forEach(t => {
+                    t.className = 'arsenal-tab px-3.5 py-1.5 bg-obsidian text-slate-300 border border-cyan/30 hover:border-cyan cyber-clip-sm transition-all';
+                });
+                tab.className = 'arsenal-tab active-tab px-3.5 py-1.5 bg-cyan text-void font-bold cyber-clip-sm transition-all';
+
+                const selected = tab.dataset.cat;
+                document.querySelectorAll('.arsenal-card').forEach(card => {
+                    if (selected === 'all' || card.dataset.category === selected) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        /* -----------------------------------------------------------
+         * 7. TEXT SCRAMBLE DECODE EFFECT ON SCROLL
+         * ----------------------------------------------------------- */
+        const CHARS = '!<>-_\\/[]{}—=+*^?#________';
+        function scrambleText(el) {
+            const original = el.dataset.scramble || el.textContent;
+            let iteration = 0;
+            const interval = setInterval(() => {
+                el.textContent = original
+                    .split('')
+                    .map((letter, index) => {
+                        if (letter === ' ') return ' ';
+                        if (index < iteration) return original[index];
+                        return CHARS[Math.floor(Math.random() * CHARS.length)];
+                    })
+                    .join('');
+                if (iteration >= original.length) clearInterval(interval);
+                iteration += 1 / 2;
+            }, 25);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const header = entry.target.querySelector('[data-scramble]');
+                    if (header && !header.dataset.decoded) {
+                        header.dataset.decoded = 'true';
+                        scrambleText(header);
+                    }
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal-node').forEach(node => observer.observe(node));
+
+        /* -----------------------------------------------------------
+         * 8. CUSTOM RETICLE CURSOR & FX TOGGLE
+         * ----------------------------------------------------------- */
+        const cursorDot = document.getElementById('cursorDot');
+        const cursorRing = document.getElementById('cursorRing');
+
+        window.addEventListener('mousemove', (e) => {
+            if (!cursorDot || !cursorRing) return;
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorRing.style.left = `${e.clientX}px`;
+            cursorRing.style.top = `${e.clientY}px`;
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, button, input, select, textarea, .tilt-card')) {
+                cursorRing.classList.add('cursor-hover');
+            } else {
+                cursorRing.classList.remove('cursor-hover');
+            }
+        });
+
+        // CRT & Canvas FX Toggle
+        let fxEnabled = true;
+        document.getElementById('fxToggleBtn').addEventListener('click', () => {
+            fxEnabled = !fxEnabled;
+            document.body.classList.toggle('fx-disabled', !fxEnabled);
+            document.getElementById('fxStatusText').textContent = fxEnabled ? 'FX: ON' : 'FX: OFF';
+            showHudToast(fxEnabled ? 'CRT & HUD VISUAL FX ENABLED' : 'MINIMAL CLEAN DISPLAY MODE');
+        });
+
+        // Mobile Navigation Drawer
+        const mobileMenu = document.getElementById('mobileMenu');
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        /* -----------------------------------------------------------
+         * 9. INTERACTIVE CYBER-GRID BACKGROUND CANVAS
+         * ----------------------------------------------------------- */
+        const canvas = document.getElementById('cyberCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        for (let i = 0; i < 48; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: (Math.random() - 0.5) * 0.6,
+                size: Math.random() * 2 + 1,
+                color: i % 3 === 0 ? '#00f3ff' : i % 3 === 1 ? '#ff007f' : '#fcee0a'
+            });
+        }
+
+        function animateCyberBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Subtle perspective grid at bottom
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const step = 65;
+            for (let x = 0; x < canvas.width; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Floating telemetry nodes
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+
+                // Connect nearby nodes to mouse
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 150) {
+                    ctx.strokeStyle = `rgba(0, 243, 255, ${1 - dist / 150})`;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                }
+            });
+
+            requestAnimationFrame(animateCyberBackground);
+        }
+
+        /* -----------------------------------------------------------
+         * 10. UPLINK TERMINAL, CLIPBOARD & BOOT SEQUENCE
+         * ----------------------------------------------------------- */
+        function showHudToast(message) {
+            const toast = document.getElementById('hudToast');
+            document.getElementById('hudToastText').textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        function copyNodeText(text, toastMsg) {
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showHudToast(toastMsg);
+        }
+
+        // Live byte telemetry counter on contact form
+        const senderMessage = document.getElementById('senderMessage');
+        const packetTelemetry = document.getElementById('packetTelemetry');
+        senderMessage.addEventListener('input', () => {
+            const bytes = new Blob([senderMessage.value]).size;
+            packetTelemetry.textContent = `PAYLOAD_SIZE: ${bytes} BYTES`;
+        });
+
+        document.getElementById('uplinkForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('senderName').value;
+            const directive = document.getElementById('missionType').value;
+            showHudToast(`PACKET TRANSMITTED // ACK FOR ${name.toUpperCase()} [${directive}]`);
+            e.target.reset();
+            packetTelemetry.textContent = 'PAYLOAD_SIZE: 0 BYTES // SENT';
+        });
+
+        // Live HUD Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('hudClock').textContent = now.toTimeString().split(' ')[0];
+        }, 1000);
+
+        // Boot sequence initialization
+        window.onload = function () {
+            renderProjects('all');
+            initTiltCards();
+            animateCyberBackground();
+
+            const bootScreen = document.getElementById('bootScreen');
+            const bootProgress = document.getElementById('bootProgress');
+            const bootPercent = document.getElementById('bootPercent');
+            let pct = 0;
+
+            function finishBoot() {
+                bootScreen.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => bootScreen.classList.add('hidden'), 700);
+            }
+
+            document.getElementById('skipBootBtn').addEventListener('click', finishBoot);
+
+            const timer = setInterval(() => {
+                pct += 10;
+                if (pct > 100) pct = 100;
+                bootProgress.style.width = `${pct}%`;
+                bootPercent.textContent = `${pct}%`;
+                if (pct === 100) {
+                    clearInterval(timer);
+                    setTimeout(finishBoot, 220);
+                }
+            }, 85);
+        };
+    </script>
+</body>
+</html>
