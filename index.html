@@ -1434,13 +1434,53 @@
             packetTelemetry.textContent = `PAYLOAD_SIZE: ${bytes} BYTES`;
         });
 
-        document.getElementById('uplinkForm').addEventListener('submit', (e) => {
+        document.getElementById('uplinkForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'TRANSMITTING ENCRYPTED PACKET...';
+            submitBtn.disabled = true;
+
             const name = document.getElementById('senderName').value;
+            const email = document.getElementById('senderEmail').value;
             const directive = document.getElementById('missionType').value;
-            showHudToast(`PACKET TRANSMITTED // ACK FOR ${name.toUpperCase()} [${directive}]`);
-            e.target.reset();
-            packetTelemetry.textContent = 'PAYLOAD_SIZE: 0 BYTES // SENT';
+            const message = document.getElementById('senderMessage').value;
+
+            const payload = {
+                access_key: "9117cbaa-bebe-4aea-8521-6bcef1f928de",
+                name: name,
+                email: email,
+                subject: `[ROVIC.OS UPLINK] New Transmission: ${directive} (${name})`,
+                directive: directive,
+                message: message
+            };
+
+            try {
+                const response = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showHudToast(`PACKET DELIVERED // ACK TRANSMITTED TO YOUR INBOX`);
+                    e.target.reset();
+                    packetTelemetry.textContent = 'PAYLOAD_SIZE: 0 BYTES // SENT';
+                } else {
+                    showHudToast(`TRANSMISSION FAILED // ${result.message || 'GATEWAY REJECTED'}`);
+                }
+            } catch (err) {
+                showHudToast(`UPLINK ERROR // NETWORK UNREACHABLE`);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
         });
 
         // Live HUD Clock
